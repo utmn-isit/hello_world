@@ -12,7 +12,7 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'Hello',
       theme: ThemeData(
-        primarySwatch: Colors.red,
+        primarySwatch: Colors.green,
         textTheme: const TextTheme(
           bodyMedium: TextStyle(
             fontSize: 50,
@@ -33,6 +33,15 @@ class MyHomePage extends StatefulWidget {
 
 class _MyHomePageState extends State<MyHomePage> {
   bool show = false;
+  final _textController = TextEditingController();
+  String inputText = '';
+
+  @override
+  void dispose() {
+    // Clean up the controller when the widget is disposed.
+    _textController.dispose();
+    super.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -40,42 +49,44 @@ class _MyHomePageState extends State<MyHomePage> {
       appBar: AppBar(
         title: Text(widget.title),
       ),
-      body: Stack(
-        children: <Widget>[
-          if (show)
-            Positioned(
-              top: MediaQuery.of(context).size.height / 3,
-              width: MediaQuery.of(context).size.width,
-              child: const Align(
-                alignment: Alignment.center,
-                child: Text(
-                  'Hello World',
-                  style: TextStyle(
-                    color: Colors.red,
-                  ),
+      body: Padding(
+        padding: const EdgeInsets.symmetric(
+            horizontal: 40.0,
+            vertical: 40.0,
+        ),
+        child: Center(
+          child: Column(
+            // crossAxisAlignment: CrossAxisAlignment.stretch,
+            children: [
+              TextField(
+                controller: _textController,
+                decoration: const InputDecoration(
+                  labelText: 'Введите текст:',
                 ),
               ),
-            ),
-          Center(
-            child: ElevatedButton(
-              style: ButtonStyle(
-                shape: MaterialStateProperty.all(
-                  const RoundedRectangleBorder(
-                    borderRadius: BorderRadius.all(Radius.circular(10.0)),
-                  ),
+              const SizedBox(height: 16.0),
+              ElevatedButton(
+                onPressed: () {
+                  setState(() {
+                    inputText = _textController.text;
+                  });
+                },
+                child: const Text(
+                    'Отобразить',
                 ),
-                backgroundColor: MaterialStateProperty.all<Color>(Colors.red),
-                foregroundColor: MaterialStateProperty.all<Color>(Colors.white),
               ),
-              onPressed: () {
-                setState(() {
-                  show = !show;
-                });
-              },
-              child: Text(!show ? 'Отобразить' : 'Скрыть'),
-            ),
-          )
-        ],
+              const SizedBox(height: 16.0),
+              Text(
+                inputText,
+                style: const TextStyle(
+                    fontSize: 41.0,
+                    color: Colors.green,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }
